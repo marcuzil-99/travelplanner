@@ -19,6 +19,7 @@ public class BookingController {
     private final BookingService bookingService;
 
     @GetMapping
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public List<BookingResponse> getAllBookings(@RequestParam String customerEmail) {
         return bookingService.getBookings(customerEmail);
     }
@@ -30,6 +31,7 @@ public class BookingController {
     }
 
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public BookingResponse updateBooking(@PathVariable Long id, @Valid @RequestBody BookingRequest bookingRequest) {
         return bookingService.updateBooking(id, bookingRequest);
     }
