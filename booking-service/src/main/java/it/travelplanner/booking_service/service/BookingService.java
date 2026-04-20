@@ -11,7 +11,7 @@ import it.travelplanner.booking_service.dto.BookingRequest;
 import it.travelplanner.booking_service.dto.BookingResponse;
 import it.travelplanner.booking_service.dto.NotificationRequest;
 import it.travelplanner.booking_service.dto.NotificationResponse;
-import it.travelplanner.booking_service.entity.Booking;
+import it.travelplanner.booking_service.entity.*;
 import it.travelplanner.booking_service.repository.BookingRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +46,9 @@ public class BookingService {
         booking.setCreatedAt(LocalDateTime.now());
 
         Booking savedBooking = bookingRepository.save(booking);
+        
+        sendNotification(savedBooking, Operations.CREATE);
+        
         return toResponse(savedBooking);
     }
 
@@ -80,10 +83,10 @@ public class BookingService {
         );
     }
     
-    public NotificationResponse sendNotification(Booking booking, String operation) {
+    public NotificationResponse sendNotification(Booking booking, Operations op) {
     	String subject="";
-    	switch (operation) {
-    	case "CREATION":
+    	switch (op) {
+    	case Operations.CREATE:
     		subject="Booking created";
     		sendNotification(new NotificationRequest(booking, subject));
     		break;
