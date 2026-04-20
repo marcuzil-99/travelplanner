@@ -7,10 +7,7 @@ import java.util.List;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
-import it.travelplanner.booking_service.dto.BookingRequest;
-import it.travelplanner.booking_service.dto.BookingResponse;
-import it.travelplanner.booking_service.dto.NotificationRequest;
-import it.travelplanner.booking_service.dto.NotificationResponse;
+import it.travelplanner.booking_service.dto.*;
 import it.travelplanner.booking_service.entity.*;
 import it.travelplanner.booking_service.repository.BookingRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -23,8 +20,9 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final RabbitTemplate rabbitTemplate;
 	
-	public void sendNotification(NotificationRequest notificationRequest) {
+	public void sendNotificationService(NotificationRequest notificationRequest) {
 		rabbitTemplate.convertAndSend("booking-notification", notificationRequest);
+		System.out.println("debug dentro metodo sendNotificationService");
 	}
 
     public List<BookingResponse> getBookings(String customerEmail) {
@@ -88,7 +86,7 @@ public class BookingService {
     	switch (op) {
     	case Operations.CREATE:
     		subject="Booking created";
-    		sendNotification(new NotificationRequest(booking, subject));
+    		sendNotificationService(new NotificationRequest(booking, subject));
     		break;
     	}
     	return new NotificationResponse(booking.getCustomerEmail(),subject);

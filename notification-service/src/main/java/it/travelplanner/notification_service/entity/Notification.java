@@ -2,12 +2,14 @@ package it.travelplanner.notification_service.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import it.travelplanner.notification_service.entity.EmailStatus;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "notifications")
 public class Notification {
 	
 	@Id
@@ -25,7 +27,7 @@ public class Notification {
 	
 	@Column(nullable = false, length = 20)
 	@Enumerated(EnumType.STRING)
-	private EmailStatus status;
+	private EmailStatus status = EmailStatus.SENT;
 	
 	
 
