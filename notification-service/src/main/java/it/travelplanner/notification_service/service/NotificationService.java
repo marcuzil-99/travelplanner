@@ -32,7 +32,13 @@ public class NotificationService {
 		SimpleMailMessage message = new SimpleMailMessage();
 		switch(subject) {
 		case "Booking created":
-			content = "Dear customer, your booking to " + destination + " has been confirmed.";
+			content = "Dear " + booking.getCustomerName() + ", your booking to " + destination + " has been confirmed.";
+			break;
+		case "Booking updated":
+			content = "Dear " + booking.getCustomerName() + ", your booking to " + destination + " has been updated.";
+			break;
+		case "Booking deleted":
+			content = "Dear " + booking.getCustomerName() + ", your booking to " + destination + " has been deleted.";
 			break;
 		}
 		message.setTo(customer);
