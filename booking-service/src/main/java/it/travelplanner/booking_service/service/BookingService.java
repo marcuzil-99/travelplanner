@@ -71,6 +71,8 @@ public class BookingService {
 
         bookingRepository.delete(booking);
         
+        booking.setStatus(Status.CANCELLED);
+        
         sendNotification(booking, Operations.DELETE);
         
         return toResponse(booking);
