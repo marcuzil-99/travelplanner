@@ -22,7 +22,7 @@ public class BookingService {
 	
 	public void sendNotificationService(NotificationRequest notificationRequest) {
 		rabbitTemplate.convertAndSend("booking-notification", notificationRequest);
-		System.out.println("debug dentro metodo sendNotificationService");
+		
 	}
 
     public List<BookingResponse> getBookings(String customerEmail) {
@@ -59,6 +59,9 @@ public class BookingService {
         booking.setDestination(bookingDto.destination());
 
         Booking savedBooking = bookingRepository.save(booking);
+        
+        sendNotification(savedBooking, Operations.UPDATE);
+        
         return toResponse(savedBooking);
     }
 
@@ -66,9 +69,11 @@ public class BookingService {
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Booking not found with id: " + id));
 
-        BookingResponse response = toResponse(booking);
         bookingRepository.delete(booking);
-        return response;
+        
+        sendNotification(booking, Operations.DELETE);
+        
+        return toResponse(booking);
     }
 
     private BookingResponse toResponse(Booking booking) {
