@@ -51,6 +51,8 @@ services:
 
   notification-service:
     build: ./notification-service
+    env_file:
+      - .env
     container_name: notification-service
     depends_on:
       - postgres-notification
@@ -74,6 +76,3 @@ volumes:
 networks:
   travelplanner-net:
     driver: bridge
-    
-env_file:
-  - .env
