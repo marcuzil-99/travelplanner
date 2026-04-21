@@ -93,6 +93,14 @@ public class BookingService {
     		subject="Booking created";
     		sendNotificationService(new NotificationRequest(booking, subject));
     		break;
+    	case Operations.UPDATE:
+    		subject="Booking updated";
+    		sendNotificationService(new NotificationRequest(booking, subject));
+    		break;
+    	case Operations.DELETE:
+    		subject="Booking deleted";
+    		sendNotificationService(new NotificationRequest(booking, subject));
+    		break;
     	}
     	return new NotificationResponse(booking.getCustomerEmail(),subject);
     }
