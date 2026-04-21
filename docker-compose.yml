@@ -1,17 +1,25 @@
 services:
-  postgres:
+  postgres-booking:
     image: postgres:16
-    container_name: booking-postgres
     environment:
       POSTGRES_DB: travelplanner
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
     networks:
-      - travelplanner-net
+    - travelplanner-net
+
+  postgres-notification:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: travelplannernotifications
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    networks:
+    - travelplanner-net
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -26,12 +34,12 @@ services:
     build: ./booking-service
     container_name: booking-service
     depends_on:
-      - postgres
+      - postgres-booking
       - rabbitmq
     ports:
       - "8081:8081"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/travelplanner
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-booking:5432/travelplanner
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
@@ -45,12 +53,12 @@ services:
     build: ./notification-service
     container_name: notification-service
     depends_on:
-      - postgres
+      - postgres-notification
       - rabbitmq
     ports:
       - "8082:8082"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/travelplannernotifications
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-notification:5432/travelplannernotifications
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
@@ -66,3 +74,6 @@ volumes:
 networks:
   travelplanner-net:
     driver: bridge
+    
+env_file:
+  - .env
